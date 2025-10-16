@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación de Peligrosidad Eléctrica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        legend {
+            font-weight: bold;
+            color: #007bff;
+            padding: 0 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .question {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted #eee;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #resultado {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            text-align: center;
+            font-weight: bold;
+        }
+        .peligro-alto { background-color: #dc3545; color: white; }
+        .peligro-medio { background-color: #ffc107; color: #333; }
+        .peligro-bajo { background-color: #28a745; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Evaluación de Peligrosidad Eléctrica</h1>
+    <p>Responde las siguientes preguntas para determinar el riesgo de la instalación.</p>
+
+    <form id="formularioPeligro">
+
+        <fieldset>
+            <legend>Protección</legend>
+
+            <div class="question">
+                <label>1. ¿La instalación cuenta con Puesta a Tierra (PAT)?</label>
+                <input type="radio" name="pat" value="si" required> Sí
+                <input type="radio" name="pat" value="no"> No
+            </div>
+            
+            <div class="question">
+                <label>2. ¿La instalación posee Termomagnéticas?</label>
+                <input type="radio" name="termomagneticas" value="si" required> Sí
+                <input type="radio" name="termomagneticas" value="no"> No
+            </div>
+            
+            <div class="question">
+                <label>3. ¿La instalación cuenta con Disyuntor (Diferencial)?</label>
+                <input type="radio" name="disyuntor" value="si" required> Sí
+                <input type="radio" name="disyuntor" value="no"> No
+            </div>
+
+             <div class="question">
+                <label>4. En el pilar usan:</label>
+                <input type="radio" name="pilar" value="termomagneticas" required> Termomagnéticas
+                <input type="radio" name="pilar" value="tapones"> Tapones
+            </div>
+             
+             <div class="question">
+                <label>5. ¿Todos los TUG tienen puesta a tierra (tercer orificio)?</label>
+                <input type="radio" name="tug_pat" value="si" required> Sí
+                <input type="radio" name="tug_pat" value="no"> No
+            </div>
+            
+            <div class="question">
+                <label>6. ¿Qué tipo de aislación tienen los empalmes?</label>
+                <input type="radio" name="empalmes" value="cinta_aislante" required> Cinta aislante
+                <input type="radio" name="empalmes" value="cinta_papel_transparente"> Cinta de papel / Transparente
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>Canalización y Circuitos</legend>
+
+            <div class="question">
+                <label>7. ¿Se utiliza caño corrugado IGNÍFUGO?</label>
+                <input type="radio" name="cano_ignifugo" value="si" required> Sí
+                <input type="radio" name="cano_ignifugo" value="no"> No
+            </div>
+
+            <div class="question">
+                <label>8. ¿Todos los circuitos están canalizados (embutidos o en cañería)?</label>
+                <input type="radio" name="canalizados" value="si" required> Sí
+                <input type="radio" name="canalizados" value="no"> No
+            </div>
+
+            <div class="question">
+                <label>9. ¿TUG e IUG (Uso General y Uso Especial) comparten circuito?</label>
+                <input type="radio" name="comparten_circuito" value="no" required> No (Están separados)
+                <input type="radio" name="comparten_circuito" value="si"> Sí (Comparten circuito)
+            </div>
+
+        </fieldset>
+        
+        <button type="submit">Evaluar Peligrosidad</button>
+    </form>
+
+    <div id="resultado">
+        </div>
+
+</div>
+
+<script>
+    document.getElementById('formularioPeligro').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // 1. Obtener los valores del formulario
+        const pat = document.querySelector('input[name="pat"]:checked').value;
+        const termomagneticas = document.querySelector('input[name="termomagneticas"]:checked').value;
+        const disyuntor = document.querySelector('input[name="disyuntor"]:checked').value;
+        const pilar = document.querySelector('input[name="pilar"]:checked').value;
+        const tug_pat = document.querySelector('input[name="tug_pat"]:checked').value;
+        const empalmes = document.querySelector('input[name="empalmes"]:checked').value;
+        const cano_ignifugo = document.querySelector('input[name="cano_ignifugo"]:checked').value;
+        const canalizados = document.querySelector('input[name="canalizados"]:checked').value;
+        const comparten_circuito = document.querySelector('input[name="comparten_circuito"]:checked').value;
+        
+        let puntos_peligro = 0; // Inicializar contador de puntos de riesgo
+        
+        // 2. Asignar puntos de peligro (mayor punto = mayor riesgo)
+        
+        // Puntos críticos (Riesgo ALTO)
+        if (disyuntor === 'no') { puntos_peligro += 5; } // Máximo riesgo personal
+        if (pat === 'no') { puntos_peligro += 4; } // Alto riesgo personal/equipo
+        if (pilar === 'tapones') { puntos_peligro += 4; } // Riesgo de incendio/protección deficiente
+        if (empalmes === 'cinta_papel_transparente') { puntos_peligro += 4; } // Muy alto riesgo de cortocircuito/fuego
+        
+        // Puntos importantes (Riesgo MEDIO)
+        if (termomagneticas === 'no') { puntos_peligro += 3; } // Riesgo de sobrecarga
+        if (tug_pat === 'no') { puntos_peligro += 3; } // Riesgo al usar aparatos
+        if (canalizados === 'no') { puntos_peligro += 3; } // Riesgo de daño físico/cable expuesto
+        
+        // Puntos menores (Riesgo BAJO/Medio)
+        if (cano_ignifugo === 'no') { puntos_peligro += 2; } // Riesgo de propagación de fuego
+        if (comparten_circuito === 'si') { puntos_peligro += 1; } // Riesgo de sobrecarga en un solo circuito
+        
+        // 3. Determinar el nivel de peligrosidad
+        let nivel_peligro;
+        let mensaje;
+        let clase_css;
+
+        if (puntos_peligro >= 10) {
+            nivel_peligro = "PELIGRO ALTO 🔴";
+            mensaje = "La instalación presenta deficiencias CRÍTICAS que representan un alto riesgo de electrocución e incendio. REQUIERE CORRECCIÓN URGENTE.";
+            clase_css = "peligro-alto";
+        } else if (puntos_peligro >= 5) {
+            nivel_peligro = "PELIGRO MEDIO 🟠";
+            mensaje = "La instalación tiene deficiencias importantes (falta de Disyuntor/PAT). Se recomienda realizar correcciones prioritarias para aumentar la seguridad.";
+            clase_css = "peligro-medio";
+        } else {
+            nivel_peligro = "PELIGRO BAJO 🟢";
+            mensaje = "La instalación cumple con la mayoría de las medidas básicas de seguridad. Revise los puntos menores para optimizar.";
+            clase_css = "peligro-bajo";
+        }
+        
+        // 4. Mostrar el resultado
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.innerHTML = `Nivel de Peligrosidad: ${nivel_peligro}<br>${mensaje}`;
+        resultadoDiv.className = clase_css;
+
+        // Opcional: Desplazarse al resultado
+        resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+
+</body>
+</html>
